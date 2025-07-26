@@ -5,12 +5,18 @@ import com.motorplace.back_core.dto.UserResponseDTO;
 import com.motorplace.back_core.entity.User;
 import com.motorplace.back_core.mapper.UserMapper;
 import com.motorplace.back_core.repository.UserRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+// @validated é usado para ativar a validação de bean no Spring,
+// permitindo que as anotações de validação (como @NotBlank, @Size) funcionem corretamente.
+@Validated
 public class UserService {
 
     private final UserRepository userRepository;
@@ -21,9 +27,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-
-
-    public UserResponseDTO createUser(UserRequestDTO dto){
+    public UserResponseDTO createUser(@Valid UserRequestDTO dto){
         User user = userMapper.toEntity(dto);
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
@@ -33,11 +37,11 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toDTO).collect(Collectors.toList());
     }
 
-    public UserResponseDTO findByUsername (String username){
+    public UserResponseDTO findByUsername (@NotBlank String username){
         return userRepository.findByUsernameRepo(username);
     }
 
-    public UserResponseDTO updateUser(Long id, UserRequestDTO user){
+    public UserResponseDTO updateUser(Long id, @Valid UserRequestDTO user){
         User existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         User updatedUserInst = existingUser.toBuilder()
