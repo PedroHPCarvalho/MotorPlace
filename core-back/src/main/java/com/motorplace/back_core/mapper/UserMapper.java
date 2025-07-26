@@ -14,7 +14,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     //Faz a conversão de UserRequestDTO para User
-    UserRequestDTO toDTO (User user);
+    UserResponseDTO toDTO (User user);
     //Faz a conversão de User para UserResponseDTO
-    User toEntity (UserResponseDTO dto);
+    User toEntity (UserRequestDTO dto);
 }

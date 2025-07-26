@@ -1,37 +1,56 @@
 package com.motorplace.back_core.entity;
 
-// Importações do Jakarta Persistence (JPA) para mapeamento da entidade no banco de dados
+// Importações para JPA (persistência) e Lombok
 import jakarta.persistence.*;
-// Anotações do Lombok para gerar código automaticamente
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * A classe User representa a entidade de usuário no sistema.
- * Essa entidade está associada à tabela "users" no banco de dados.
+ * Representa um usuário no sistema, sendo mapeado para a tabela "users" no banco de dados.
  *
- * Lombok:
- * - @Data: Gera automaticamente getters, setters, toString(), equals() e hashCode().
- * - @NoArgsConstructor: Cria um construtor sem argumentos.
- * - @AllArgsConstructor: Cria um construtor com todos os atributos da classe.
+ * Anotações Lombok:
+ * - @Data: Gera automaticamente os métodos getters, setters, toString(), equals() e hashCode().
+ * - @NoArgsConstructor: Gera um construtor padrão (sem parâmetros).
+ * - @AllArgsConstructor: Gera um construtor com todos os campos.
+ * - @Builder(toBuilder = true): Permite criar objetos usando o padrão Builder e
+ *   também gerar uma cópia modificável com .toBuilder().
  *
- * JPA:
- * - @Entity: Indica que a classe é uma entidade JPA.
- * - @Table(name = "users"): Mapeia a entidade para a tabela "users".
+ * Anotações JPA:
+ * - @Entity: Marca esta classe como uma entidade JPA.
+ * - @Table(name = "users"): Define o nome da tabela no banco de dados como "users".
  */
-
- @Entity
+@Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User{
+@Builder(toBuilder = true) // Habilita uso de .toBuilder()
+public class User {
+
+    /**
+     * Identificador único do usuário.
+     * @Id indica que é a chave primária.
+     * @GeneratedValue(strategy = GenerationType.IDENTITY) delega ao banco a geração incremental de ID.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = 0L;
 
+    /**
+     * Nome de usuário usado para login/autenticação.
+     */
     private String username;
+
+    /**
+     * Senha (recomenda-se aplicar criptografia/hashing).
+     */
     private String password;
+
+    /**
+     * Papel (role) do usuário no sistema. Ex: "ADMIN", "USER", etc.
+     */
     private String role;
 }
