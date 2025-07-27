@@ -1,14 +1,17 @@
 package com.motorplace.back_core.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.StringTokenizer;
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponseDTO {
     private Long id;
     private String username;
-    private String password;
     private String role;
+    // Adicione outros campos que deseja retornar na resposta
 }

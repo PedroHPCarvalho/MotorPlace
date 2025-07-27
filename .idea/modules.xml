@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MotorPlace.iml" filepath="$PROJECT_DIR$/.idea/MotorPlace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core-back/back-core.iml" filepath="$PROJECT_DIR$/core-back/back-core.iml" />
     </modules>
   </component>
 </project>

@@ -7,10 +7,14 @@ import com.motorplace.back_core.mapper.UserMapper;
 import com.motorplace.back_core.repository.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +31,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserResponseDTO createUser(@Valid UserRequestDTO dto){
+    public UserResponseDTO createUserServ (@Valid @RequestBody UserRequestDTO dto){
         User user = userMapper.toEntity(dto);
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
@@ -37,8 +41,18 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toDTO).collect(Collectors.toList());
     }
 
-    public UserResponseDTO findByUsername (@NotBlank String username){
-        return userRepository.findByUsernameRepo(username);
+    public UserResponseDTO findByUsername(@NotBlank String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if(userOptional.isPresent()) {
+            return userMapper.toDTO(userOptional.get());
+        }
+        return null; // ou lance exceção, ou use Optional<UserResponseDTO>
+    }
+
+    public UserResponseDTO findById(@NotBlank Long id) {
+        return userRepository.findById(id)
+                .map(userMapper::toDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário com ID " + id + " não encontrado"));
     }
 
     public UserResponseDTO updateUser(Long id, @Valid UserRequestDTO user){
