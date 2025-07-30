@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration // Indica ao Spring que essa classe contém configurações que devem ser carregadas na inicialização do contexto
 public class SecurityConfig {
@@ -24,6 +25,22 @@ public class SecurityConfig {
                 .anyRequest().permitAll();
 
         // Constrói e retorna o filtro de segurança com as configurações definidas acima
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html" // se você redirecionar manualmente
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf.disable()); // desativa CSRF para facilitar teste local
+
         return http.build();
     }
 }
